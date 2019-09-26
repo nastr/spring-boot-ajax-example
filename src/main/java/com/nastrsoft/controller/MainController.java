@@ -1,18 +1,11 @@
 package com.nastrsoft.controller;
 
-import com.nastrsoft.converter.TypeConverter;
 import com.nastrsoft.model.Type;
 import com.nastrsoft.services.ResourceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -37,11 +30,6 @@ public class MainController {
         service.setCustomLatestDB(db);
 
         return service.getResponse(Type.PATCH);
-    }
-
-    @InitBinder
-    public void initBinder(final WebDataBinder webdataBinder) {
-        webdataBinder.registerCustomEditor(Type.class, new TypeConverter());
     }
 
 //    @PostMapping("/api/search")

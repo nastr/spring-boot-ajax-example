@@ -16,10 +16,7 @@ function updatePatches(event) {
     let dbColOld = document.querySelector('#db');
 
     dbColOld.replaceWith(dbCol);
-
-    let patchColOld = document.querySelector('#patch');
-    patchColOld.innerHTML = '';
-    patch = [];
+    document.querySelector('#patch').replaceWith(getSpinner());
 
     fetch('/api/list?db=' + latest, {
         headers: {'Content-Type': 'application/json; charset=utf-8'},
@@ -29,7 +26,7 @@ function updatePatches(event) {
         .then(d => {
             patch = d.list;
             let patchCol = prepareColumn('patch');
-            patchColOld.innerHTML = patchCol.innerHTML;
+            document.querySelector('#patch').replaceWith(patchCol);
             document.querySelectorAll('.btn').forEach(b => b.disabled = false);
         })
         .catch(alert);
@@ -105,12 +102,30 @@ async function fetchData(type) {
     }
 }
 
+function getSpinner() {
+    let spinner = document.createElement('div');
+    spinner.classList.add('spinner-border', 'm-5');
+    spinner.role = 'status';
+    spinner.style.width = '6rem';
+    spinner.style.height = '6rem';
+    let p = document.createElement('p');
+    p.classList.add('font-weight-bold');
+    p.innerHTML = 'PATCH\'s';
+    let col = document.createElement('div');
+    col.classList.add('col');
+    col.id = 'patch';
+    col.appendChild(p);
+    col.appendChild(spinner);
+    return col;
+}
+
 async function main() {
     await fetchData("db");
     let dbCol = prepareColumn('db');
     let row = document.createElement('div');
     row.classList.add('row');
     row.appendChild(dbCol);
+    row.appendChild(getSpinner());
     row.querySelectorAll('.btn').forEach(b => b.disabled = true);
     let container = document.createElement('div');
     container.classList.add('container');
@@ -118,7 +133,7 @@ async function main() {
     document.body.appendChild(container);
     await fetchData("patch").then(() => {
         let patchCol = prepareColumn('patch');
-        document.querySelector('.row').appendChild(patchCol);
+        document.querySelector('#patch').replaceWith(patchCol);
         document.querySelectorAll('.btn').forEach(b => b.disabled = false);
     });
 }

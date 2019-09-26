@@ -1,12 +1,16 @@
 package com.nastrsoft.converter;
 
 import com.nastrsoft.model.Type;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
-import java.beans.PropertyEditorSupport;
+@Component
+public class TypeConverter implements Converter<String, Type> {
 
-public class TypeConverter extends PropertyEditorSupport {
+    @Nullable
     @Override
-    public void setAsText(final String text) {
-        setValue(Type.valueOf(text.trim().toUpperCase()));
+    public Type convert(String s) {
+        return Type.fromValue(s.trim().toUpperCase());
     }
 }

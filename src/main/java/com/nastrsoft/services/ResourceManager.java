@@ -46,7 +46,7 @@ public class ResourceManager implements InitializingBean {
     public void afterPropertiesSet() throws FileNotFoundException {
         dbFiles = IntStreamEx.range(6).mapToObj(i -> Paths.get(i + ".db")).toImmutableList();
         latestDb = StreamEx.of(dbFiles).max(dbsComparator).orElseThrow(FileNotFoundException::new);
-        patchFiles = IntStreamEx.range(Integer.valueOf(substringBefore(latestDb.getFileName().toString(), DB_EXT)))
+        patchFiles = IntStreamEx.range(valueOf(substringBefore(latestDb.getFileName().toString(), DB_EXT)))
                 .mapToObj(i -> Paths.get(i + "and" + latestDb + ".sql")).toImmutableList();
     }
 
@@ -54,16 +54,16 @@ public class ResourceManager implements InitializingBean {
         Path path = Paths.get(fileName);
         if (latestDb != null && !dbFiles.isEmpty() && dbFiles.get(dbFiles.size() - 1).equals(path)) {
             patchFiles = new ArrayList<>();
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(3);
             latestDb = StreamEx.of(dbFiles).max(dbsComparator).orElseThrow(FileNotFoundException::new);
-            patchFiles = IntStreamEx.range(Integer.valueOf(substringBefore(fileName, DB_EXT)))
+            patchFiles = IntStreamEx.range(valueOf(substringBefore(fileName, DB_EXT)))
                     .mapToObj(i -> Paths.get(i + "and" + latestDb + ".sql")).toImmutableList();
         } else {
             if (dbFiles.contains(path)) {
                 patchFiles = new ArrayList<>();
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(3);
                 latestDb = path;
-                patchFiles = IntStreamEx.range(Integer.valueOf(substringBefore(fileName, DB_EXT)))
+                patchFiles = IntStreamEx.range(valueOf(substringBefore(fileName, DB_EXT)))
                         .mapToObj(i -> Paths.get(i + "and" + latestDb + ".sql")).toImmutableList();
             } else
                 throw new FileNotFoundException("Provided DB " + path + " doesn't exist");
